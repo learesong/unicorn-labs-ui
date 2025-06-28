@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthWrapper } from './components/auth/AuthWrapper';
+import { DashboardPage } from './pages/DashboardPage';
+import { PricingPage } from './pages/PricingPage';
+import { SuccessPage } from './pages/SuccessPage';
 import { 
   ArrowRight, 
   Sparkles, 
@@ -120,7 +125,7 @@ const AnimationElement = ({ type, id, onComplete }) => {
   );
 };
 
-function App() {
+function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [showDemo, setShowDemo] = useState(false);
@@ -297,7 +302,7 @@ function App() {
     },
     {
       name: "Founder",
-      price: "$29",
+      price: "£29",
       period: "/month",
       description: "For serious entrepreneurs ready to launch",
       features: [
@@ -312,7 +317,7 @@ function App() {
     },
     {
       name: "Unicorn",
-      price: "$89",
+      price: "£89",
       period: "/month",
       description: "For scaling to $10M+ businesses",
       features: [
@@ -371,10 +376,10 @@ function App() {
           
           <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-gray-600 hover:text-black transition-colors">Features</a>
-            <a href="#pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</a>
+            <a href="/pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</a>
             <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Success Stories</a>
             <button 
-              onClick={() => handleButtonClick(() => console.log('Get Started clicked'))}
+              onClick={() => handleButtonClick(() => window.location.href = '/pricing')}
               className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-all hover:shadow-lg animate-pulse-glow"
             >
               Get Started 🦄
@@ -394,10 +399,10 @@ function App() {
           <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-gray-200 p-6">
             <div className="flex flex-col space-y-4">
               <a href="#features" className="text-gray-600 hover:text-black transition-colors">Features</a>
-              <a href="#pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</a>
+              <a href="/pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</a>
               <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Success Stories</a>
               <button 
-                onClick={() => handleButtonClick(() => console.log('Mobile Get Started clicked'))}
+                onClick={() => handleButtonClick(() => window.location.href = '/pricing')}
                 className="bg-black text-white px-6 py-2 rounded-full"
               >
                 Get Started 🦄
@@ -430,7 +435,7 @@ function App() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <button 
-              onClick={() => handleButtonClick(() => console.log('Start Your Journey clicked'))}
+              onClick={() => handleButtonClick(() => window.location.href = '/pricing')}
               className="group bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition-all hover:shadow-lg flex items-center space-x-2 animate-pulse-glow"
             >
               <span>Start Your Unicorn Journey 🦄</span>
@@ -634,7 +639,7 @@ function App() {
                 }`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleButtonClick(() => console.log(`${plan.name} plan selected`));
+                  handleButtonClick(() => window.location.href = '/pricing');
                 }}
               >
                 {plan.unicornBadge && (
@@ -666,7 +671,7 @@ function App() {
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleButtonClick(() => console.log(`${plan.cta} clicked`));
+                    handleButtonClick(() => window.location.href = '/pricing');
                   }}
                   className={`w-full py-3 rounded-full font-semibold transition-all ${
                     plan.popular
@@ -696,7 +701,7 @@ function App() {
             into billion-dollar unicorn businesses with UnicornLabs.
           </p>
           <button 
-            onClick={() => handleButtonClick(() => console.log('Final CTA clicked'))}
+            onClick={() => handleButtonClick(() => window.location.href = '/pricing')}
             className="group bg-white text-black px-12 py-4 rounded-full text-xl font-semibold hover:bg-gray-100 transition-all hover:shadow-lg flex items-center space-x-2 mx-auto animate-pulse-glow"
           >
             <span>Start Your Unicorn Journey Today 🦄</span>
@@ -764,7 +769,7 @@ function App() {
             <button 
               onClick={() => {
                 setShowDemo(false);
-                handleButtonClick(() => console.log('Try It Now clicked'));
+                handleButtonClick(() => window.location.href = '/pricing');
               }}
               className="w-full bg-black text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition-all"
             >
@@ -774,6 +779,27 @@ function App() {
         </div>
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/success" element={<SuccessPage />} />
+        <Route 
+          path="/dashboard" 
+          element={
+            <AuthWrapper>
+              {(user) => <DashboardPage user={user} />}
+            </AuthWrapper>
+          } 
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 }
 
