@@ -34,21 +34,21 @@ function App() {
 
   const testimonials = [
     {
-      quote: "UnicornLabs transformed my idea into a $12M business in just 8 months. The AI-powered insights were game-changing.",
-      author: "Sarah Chen",
-      title: "Founder, TechFlow",
+      quote: "I was just trying to build a better way to rate hot girls on campus. Now I'm testifying before Congress about data privacy. UnicornLabs didn't prepare me for THAT pivot.",
+      author: "Mark Z.",
+      title: "Definitely Not Facebook",
       rating: 5
     },
     {
-      quote: "From zero to unicorn valuation in under a year. UnicornLabs made the impossible possible.",
-      author: "Marcus Rodriguez",
-      title: "CEO, DataStream",
+      quote: "Started with $20 and a dream of not paying rent. Now I have my own space program. My landlord is probably still waiting for that security deposit from 2002.",
+      author: "Elon M.",
+      title: "Guy Who Really Loves Rockets",
       rating: 5
     },
     {
-      quote: "The most comprehensive startup acceleration platform I've ever used. Worth every penny.",
-      author: "Elena Volkov",
-      title: "Founder, AI Solutions",
+      quote: "All I wanted was to sell books online. Now people blame me when their toothbrush arrives late. Also, I apparently own the internet now? UnicornLabs escalated quickly.",
+      author: "Jeff B.",
+      title: "Bald Guy with Rockets (Different Rockets)",
       rating: 5
     }
   ];
@@ -103,23 +103,21 @@ function App() {
     },
     {
       name: "Founder",
-      price: "$299",
+      price: "$29",
       period: "/month",
       description: "For serious entrepreneurs ready to launch",
       features: [
         "Advanced AI strategy development",
         "Unlimited business plan generations",
-        "Investor matching platform",
         "Team building network",
         "Priority support",
-        "Legal document templates"
       ],
       cta: "Start Building",
       popular: true
     },
     {
       name: "Unicorn",
-      price: "$999",
+      price: "$89",
       period: "/month",
       description: "For scaling to $10M+ businesses",
       features: [
@@ -128,7 +126,8 @@ function App() {
         "Custom AI model training",
         "Direct investor introductions",
         "Board advisory access",
-        "White-glove onboarding"
+        "White-glove onboarding",
+        "Investor matching platform",
       ],
       cta: "Go Unicorn",
       popular: false
