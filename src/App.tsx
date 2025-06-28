@@ -23,7 +23,9 @@ import {
   BarChart3,
   Shield,
   MessageSquare,
-  Crown
+  Crown,
+  Lightbulb,
+  Send
 } from 'lucide-react';
 
 // Custom Unicorn SVG Component
@@ -131,6 +133,7 @@ function HomePage() {
   const [showDemo, setShowDemo] = useState(false);
   const [animations, setAnimations] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [ideaText, setIdeaText] = useState('');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -219,6 +222,19 @@ function HomePage() {
         e.target.tagName === 'SECTION') {
       triggerAnimations();
     }
+  };
+
+  const handleBuildUnicorn = () => {
+    if (!ideaText.trim()) {
+      alert('Please enter your business idea first!');
+      return;
+    }
+    
+    handleButtonClick(() => {
+      // Store the idea in localStorage for the dashboard
+      localStorage.setItem('businessIdea', ideaText);
+      window.location.href = '/pricing';
+    });
   };
 
   const testimonials = [
@@ -351,23 +367,12 @@ function HomePage() {
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.02),transparent)]"></div>
       
-      {/* Floating Unicorn Elements */}
-      <div className="absolute top-20 left-10 opacity-10 animate-pulse">
-        <UnicornIcon className="w-16 h-16" />
-      </div>
-      <div className="absolute top-40 right-20 opacity-5 animate-bounce">
-        <SleekUnicorn className="w-20 h-20" />
-      </div>
-      <div className="absolute bottom-40 left-20 opacity-10 animate-pulse">
-        <MoneySymbol className="w-12 h-12" />
-      </div>
-      
       {/* Navigation */}
       <nav className="relative z-50 px-6 py-4 border-b border-gray-200 backdrop-blur-lg bg-white/80">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-              <UnicornIcon className="w-5 h-5 text-white" />
+              <Lightbulb className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-black">
               UnicornLabs
@@ -382,7 +387,7 @@ function HomePage() {
               onClick={() => handleButtonClick(() => window.location.href = '/pricing')}
               className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-all hover:shadow-lg animate-pulse-glow"
             >
-              Get Started 🦄
+              Get Started
             </button>
           </div>
           
@@ -405,7 +410,7 @@ function HomePage() {
                 onClick={() => handleButtonClick(() => window.location.href = '/pricing')}
                 className="bg-black text-white px-6 py-2 rounded-full"
               >
-                Get Started 🦄
+                Get Started
               </button>
             </div>
           </div>
@@ -414,33 +419,56 @@ function HomePage() {
 
       {/* Hero Section */}
       <section className="relative z-10 px-6 py-20 md:py-32" onClick={handleBackgroundClick}>
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center space-x-2 bg-gray-100 rounded-full px-4 py-2 mb-8 border border-gray-200">
             <Zap className="w-4 h-4 text-black" />
-            <span className="text-sm text-gray-700">Join 50,000+ successful unicorn founders 🦄</span>
+            <span className="text-sm text-gray-700">Join 50,000+ successful entrepreneurs</span>
           </div>
           
           <h1 className="text-4xl md:text-7xl font-bold mb-6 leading-tight">
+            Turn Your{' '}
             <span className="text-black underline decoration-4 underline-offset-8">
-              Idea to $1B 🦄
+              Idea
             </span>
             <br />
-            in 10 mins
+            Into a Billion-Dollar Business
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            The AI-powered platform that transforms entrepreneurs into unicorn founders. 
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+            The AI-powered platform that transforms entrepreneurs into successful founders. 
             Get personalized strategies, connect with investors, and build your empire faster than ever.
           </p>
           
+          {/* Idea Input Section */}
+          <div className="max-w-2xl mx-auto mb-8">
+            <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 shadow-lg">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Lightbulb className="w-5 h-5 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">What's your business idea?</h3>
+              </div>
+              
+              <textarea
+                value={ideaText}
+                onChange={(e) => setIdeaText(e.target.value)}
+                placeholder="Describe your business idea... (e.g., 'A sustainable fashion brand that uses AI to predict trends and reduce waste')"
+                className="w-full h-32 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-black focus:border-transparent transition-all text-gray-700 placeholder-gray-400"
+                onClick={(e) => e.stopPropagation()}
+              />
+              
+              <button 
+                onClick={handleBuildUnicorn}
+                className="w-full mt-4 bg-black text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-all hover:shadow-lg flex items-center justify-center space-x-2 animate-pulse-glow"
+              >
+                <Rocket className="w-5 h-5" />
+                <span>Build My Unicorn Now</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+          
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <button 
-              onClick={() => handleButtonClick(() => window.location.href = '/pricing')}
-              className="group bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition-all hover:shadow-lg flex items-center space-x-2 animate-pulse-glow"
-            >
-              <span>Start Your Unicorn Journey 🦄</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
             <button 
               onClick={() => {
                 handleButtonClick(() => setShowDemo(true));
@@ -455,14 +483,14 @@ function HomePage() {
           <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span>2,847 unicorns launched this month 🦄</span>
+              <span>2,847 businesses launched this month</span>
             </div>
             <div className="hidden sm:block">•</div>
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-4 h-4 text-yellow-500 fill-current" />
               ))}
-              <span className="ml-2">4.9/5 from 12,000+ unicorn founders</span>
+              <span className="ml-2">4.9/5 from 12,000+ founders</span>
             </div>
           </div>
         </div>
@@ -475,12 +503,12 @@ function HomePage() {
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               Everything You Need to Build a{' '}
               <span className="text-black underline decoration-4 underline-offset-8">
-                Unicorn 🦄
+                Successful Business
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Our AI-powered platform provides all the tools, connections, and insights 
-              you need to transform your idea into a billion-dollar unicorn business.
+              you need to transform your idea into a thriving business.
             </p>
           </div>
           
@@ -519,7 +547,7 @@ function HomePage() {
               <div className="text-4xl md:text-5xl font-bold text-black mb-2">
                 $2.8B+
               </div>
-              <div className="text-gray-600">Total unicorn funding raised 🦄</div>
+              <div className="text-gray-600">Total funding raised</div>
             </div>
             <div className="group cursor-pointer" onClick={(e) => {
               e.stopPropagation();
@@ -528,7 +556,7 @@ function HomePage() {
               <div className="text-4xl md:text-5xl font-bold text-black mb-2">
                 847
               </div>
-              <div className="text-gray-600">Unicorns created 🦄</div>
+              <div className="text-gray-600">Successful businesses</div>
             </div>
             <div className="group cursor-pointer" onClick={(e) => {
               e.stopPropagation();
@@ -537,14 +565,14 @@ function HomePage() {
               <div className="text-4xl md:text-5xl font-bold text-black mb-2">
                 92%
               </div>
-              <div className="text-gray-600">Unicorn success rate 🦄</div>
+              <div className="text-gray-600">Success rate</div>
             </div>
             <div className="group cursor-pointer" onClick={(e) => {
               e.stopPropagation();
               handleButtonClick();
             }}>
               <div className="text-4xl md:text-5xl font-bold text-black mb-2">
-                6.2M
+                6.2
               </div>
               <div className="text-gray-600">Average time to $10M</div>
               <div className="text-sm text-gray-500">months</div>
@@ -559,7 +587,7 @@ function HomePage() {
           <h2 className="text-3xl md:text-5xl font-bold mb-16">
             Success Stories from{' '}
             <span className="text-black underline decoration-4 underline-offset-8">
-              Unicorn Founders 🦄
+              Our Founders
             </span>
           </h2>
           
@@ -619,12 +647,12 @@ function HomePage() {
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               Choose Your Path to{' '}
               <span className="text-black underline decoration-4 underline-offset-8">
-                Unicorn Success 🦄
+                Success
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Whether you're just starting out or ready to scale, 
-              we have the perfect plan to accelerate your journey to $10M+ unicorn status.
+              we have the perfect plan to accelerate your journey to success.
             </p>
           </div>
           
@@ -693,18 +721,18 @@ function HomePage() {
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
             Ready to Build Your{' '}
             <span className="underline decoration-4 underline-offset-8">
-              Unicorn? 🦄
+              Dream Business?
             </span>
           </h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Join thousands of successful entrepreneurs who've transformed their ideas 
-            into billion-dollar unicorn businesses with UnicornLabs.
+            into thriving businesses with UnicornLabs.
           </p>
           <button 
             onClick={() => handleButtonClick(() => window.location.href = '/pricing')}
             className="group bg-white text-black px-12 py-4 rounded-full text-xl font-semibold hover:bg-gray-100 transition-all hover:shadow-lg flex items-center space-x-2 mx-auto animate-pulse-glow"
           >
-            <span>Start Your Unicorn Journey Today 🦄</span>
+            <span>Start Your Journey Today</span>
             <Rocket className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
@@ -716,14 +744,14 @@ function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
               <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                <UnicornIcon className="w-5 h-5 text-white" />
+                <Lightbulb className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-black">
                 UnicornLabs
               </span>
             </div>
             <div className="text-gray-500 text-sm">
-              © 2025 UnicornLabs. All rights reserved. Building the future, one unicorn at a time. 🦄
+              © 2025 UnicornLabs. All rights reserved. Building the future, one idea at a time.
             </div>
           </div>
         </div>
@@ -734,7 +762,7 @@ function HomePage() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-8 max-w-2xl w-full border border-gray-200">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-black">See UnicornLabs in Action 🦄</h3>
+              <h3 className="text-2xl font-bold text-black">See UnicornLabs in Action</h3>
               <button 
                 onClick={() => setShowDemo(false)}
                 className="text-gray-400 hover:text-black transition-colors"
@@ -745,13 +773,13 @@ function HomePage() {
             <div className="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-200">
               <div className="flex items-center space-x-2 mb-4">
                 <MessageSquare className="w-5 h-5 text-black" />
-                <span className="text-sm text-gray-600">AI Unicorn Strategist 🦄</span>
+                <span className="text-sm text-gray-600">AI Business Strategist</span>
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               </div>
               <div className="space-y-4">
                 <div className="bg-gray-100 p-4 rounded-lg border border-gray-200">
                   <p className="text-sm text-gray-800">
-                    Hi! I'm your AI unicorn strategist. Tell me about your startup idea and I'll create a comprehensive plan to get you to $1B unicorn status! 🦄💰
+                    Hi! I'm your AI business strategist. Tell me about your startup idea and I'll create a comprehensive plan to get you to success! 🚀💰
                   </p>
                 </div>
                 <div className="text-right">
@@ -761,7 +789,7 @@ function HomePage() {
                 </div>
                 <div className="bg-gray-100 p-4 rounded-lg border border-gray-200">
                   <p className="text-sm text-gray-800">
-                    Excellent! Based on unicorn market analysis, I recommend focusing on eco-friendly materials and direct-to-consumer sales. Here's your custom 18-month roadmap to unicorn status... 🦄✨
+                    Excellent! Based on market analysis, I recommend focusing on eco-friendly materials and direct-to-consumer sales. Here's your custom 18-month roadmap to success... ✨
                   </p>
                 </div>
               </div>
@@ -773,7 +801,7 @@ function HomePage() {
               }}
               className="w-full bg-black text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition-all"
             >
-              Try It Now - Free 🦄
+              Try It Now - Free
             </button>
           </div>
         </div>
