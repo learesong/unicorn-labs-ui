@@ -113,7 +113,17 @@ function App() {
   };
 
   const handleStartJourney = () => {
-    if (!ideaInput.trim()) return;
+    // If no idea is entered, use a default one or prompt user to scroll to input
+    if (!ideaInput.trim()) {
+      // Scroll to the input section
+      const inputSection = document.querySelector('.idea-input-section');
+      if (inputSection) {
+        inputSection.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      // If input section not found, use a default idea
+      setIdeaInput("I want to create an innovative tech startup");
+    }
     
     setIsGenerating(true);
     setGenerationProgress(0);
@@ -130,6 +140,18 @@ function App() {
         return prev + Math.random() * 15;
       });
     }, 200);
+  };
+
+  const handleGetStarted = () => {
+    // For "Get Started" buttons, scroll to input or go directly to business plan
+    const inputSection = document.querySelector('.idea-input-section');
+    if (inputSection) {
+      inputSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If input section not visible, go directly with default idea
+      setIdeaInput("I want to create an innovative tech startup");
+      handleStartJourney();
+    }
   };
 
   const testimonials = [
@@ -523,7 +545,7 @@ function App() {
             <a href="#pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</a>
             <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Success Stories</a>
             <button 
-              onClick={handleStartJourney}
+              onClick={handleGetStarted}
               className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-all hover:shadow-lg"
             >
               Get Started
@@ -546,7 +568,7 @@ function App() {
               <a href="#pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</a>
               <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Success Stories</a>
               <button 
-                onClick={handleStartJourney}
+                onClick={handleGetStarted}
                 className="bg-black text-white px-6 py-2 rounded-full"
               >
                 Get Started
@@ -578,7 +600,7 @@ function App() {
           </p>
           
           {/* Idea Input Section */}
-          <div className="max-w-4xl mx-auto mb-12">
+          <div className="max-w-4xl mx-auto mb-12 idea-input-section">
             <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-lg">
               <h3 className="text-2xl font-bold mb-6 text-black">What's your billion-dollar idea?</h3>
               
@@ -842,11 +864,14 @@ function App() {
                   ))}
                 </ul>
                 
-                <button className={`w-full py-3 rounded-full font-semibold transition-all ${
-                  plan.popular
-                    ? 'bg-white text-black hover:bg-gray-100'
-                    : 'border border-gray-300 hover:border-black hover:bg-gray-50'
-                }`}>
+                <button 
+                  onClick={handleGetStarted}
+                  className={`w-full py-3 rounded-full font-semibold transition-all ${
+                    plan.popular
+                      ? 'bg-white text-black hover:bg-gray-100'
+                      : 'border border-gray-300 hover:border-black hover:bg-gray-50'
+                  }`}
+                >
                   {plan.cta}
                 </button>
               </div>
