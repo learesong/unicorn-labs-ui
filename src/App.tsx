@@ -262,15 +262,20 @@ function App() {
           </p>
           
           {/* Idea Input Section */}
-          <div className="max-w-4xl mx-auto mb-12">
-            <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-lg">
-              <h3 className="text-2xl font-bold mb-6 text-black">What's your billion-dollar idea?</h3>
+          <div className="max-w-3xl mx-auto mb-12">
+            <div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-xl backdrop-blur-sm">
+              <h3 className="text-xl font-semibold mb-4 text-black">What's your billion-dollar idea?</h3>
               
-              {/* Example Ideas Carousel */}
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="text-sm text-gray-500 mb-2">💡 Crazy ideas that worked:</div>
-                <div className="text-gray-700 italic min-h-[24px] transition-all duration-500">
-                  "{exampleIdeas[currentExampleIndex]}"
+              {/* Example Ideas Carousel - Modern Eleven Labs Style */}
+              <div className="mb-4 relative">
+                <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-3 border border-purple-100">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium text-purple-700 uppercase tracking-wide">Crazy ideas that worked</span>
+                  </div>
+                  <div className="text-sm text-gray-700 font-medium min-h-[20px] transition-all duration-500">
+                    "{exampleIdeas[currentExampleIndex]}"
+                  </div>
                 </div>
               </div>
               
@@ -280,33 +285,33 @@ function App() {
                   value={ideaInput}
                   onChange={(e) => setIdeaInput(e.target.value)}
                   placeholder="Describe your idea... (e.g., 'I want to create an app that...')"
-                  className="w-full p-6 pr-24 border-2 border-gray-200 rounded-xl text-lg resize-none focus:border-black focus:outline-none transition-colors"
-                  rows={3}
+                  className="w-full p-4 pr-32 border border-gray-200 rounded-2xl text-base resize-none focus:border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-100 transition-all"
+                  rows={2}
                 />
                 
                 {/* Voice Input Button */}
                 <button
                   onClick={handleVoiceInput}
-                  className={`absolute right-16 top-6 p-3 rounded-full transition-all ${
+                  className={`absolute right-20 top-4 p-2 rounded-xl transition-all ${
                     isListening 
                       ? 'bg-red-500 text-white animate-pulse' 
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                   title="Voice input"
                 >
-                  <Mic className="w-5 h-5" />
+                  <Mic className="w-4 h-4" />
                 </button>
                 
-                {/* Submit Button */}
+                {/* LFG Button */}
                 <button
-                  className="absolute right-3 top-6 p-3 bg-black text-white rounded-full hover:bg-gray-800 transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute right-2 top-2 px-4 py-2 bg-black text-white rounded-xl hover:bg-gray-800 transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm"
                   disabled={!ideaInput.trim()}
                 >
-                  <Send className="w-5 h-5" />
+                  LFG
                 </button>
               </div>
               
-              <div className="mt-4 text-sm text-gray-500 text-center">
+              <div className="mt-3 text-xs text-gray-500 text-center">
                 Our AI will analyze your idea and create a custom roadmap to $10M+ revenue
               </div>
             </div>
