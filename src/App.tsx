@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowRight, 
   Sparkles, 
@@ -29,6 +29,7 @@ function App() {
   const [ideaInput, setIdeaInput] = useState('');
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
   const [isListening, setIsListening] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const exampleIdeas = [
     "I want to sleep in other people's houses and pay them for it",
@@ -54,6 +55,14 @@ function App() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [ideaInput]);
 
   const handleVoiceInput = () => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -277,11 +286,13 @@ function App() {
               {/* Input Field */}
               <div className="relative">
                 <textarea
+                  ref={textareaRef}
                   value={ideaInput}
                   onChange={(e) => setIdeaInput(e.target.value)}
                   placeholder="Describe your idea... (e.g., 'I want to create an app that...')"
-                  className="w-full p-6 pr-24 border-2 border-gray-200 rounded-xl text-lg resize-none focus:border-black focus:outline-none transition-colors"
-                  rows={3}
+                  className="w-full p-6 pr-24 border-2 border-gray-200 rounded-xl text-lg resize-none focus:border-black focus:outline-none transition-all duration-200 min-h-[60px] overflow-hidden"
+                  rows={1}
+                  style={{ height: 'auto' }}
                 />
                 
                 {/* Voice Input Button */}
