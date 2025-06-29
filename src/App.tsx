@@ -19,7 +19,19 @@ import {
   Shield,
   MessageSquare,
   Mic,
-  Send
+  Send,
+  ArrowLeft,
+  Download,
+  Share2,
+  Edit3,
+  Clock,
+  MapPin,
+  Briefcase,
+  PieChart,
+  Calendar,
+  FileText,
+  Lightbulb,
+  TrendingUp as Growth
 } from 'lucide-react';
 
 function App() {
@@ -29,6 +41,9 @@ function App() {
   const [ideaInput, setIdeaInput] = useState('');
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
   const [isListening, setIsListening] = useState(false);
+  const [currentPage, setCurrentPage] = useState('home'); // 'home' or 'business-plan'
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const exampleIdeas = [
@@ -95,6 +110,26 @@ function App() {
     } else {
       alert('Speech recognition not supported in this browser');
     }
+  };
+
+  const handleStartJourney = () => {
+    if (!ideaInput.trim()) return;
+    
+    setIsGenerating(true);
+    setGenerationProgress(0);
+    
+    // Simulate progress
+    const progressInterval = setInterval(() => {
+      setGenerationProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          setIsGenerating(false);
+          setCurrentPage('business-plan');
+          return 100;
+        }
+        return prev + Math.random() * 15;
+      });
+    }, 200);
   };
 
   const testimonials = [
@@ -199,8 +234,274 @@ function App() {
     }
   ];
 
+  if (currentPage === 'business-plan') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => setCurrentPage('home')}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold">UnicornLabs</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <Share2 className="w-4 h-4" />
+                <span>Share</span>
+              </button>
+              <button className="flex items-center space-x-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors">
+                <Download className="w-4 h-4" />
+                <span>Export PDF</span>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="grid lg:grid-cols-4 gap-8">
+            {/* Sidebar Navigation */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-8">
+                <h3 className="font-semibold text-gray-900 mb-4">Business Plan Sections</h3>
+                <nav className="space-y-2">
+                  {[
+                    { icon: <Lightbulb className="w-4 h-4" />, label: "Executive Summary", active: true },
+                    { icon: <Target className="w-4 h-4" />, label: "Market Analysis" },
+                    { icon: <Users className="w-4 h-4" />, label: "Target Audience" },
+                    { icon: <Briefcase className="w-4 h-4" />, label: "Business Model" },
+                    { icon: <BarChart3 className="w-4 h-4" />, label: "Financial Projections" },
+                    { icon: <Growth className="w-4 h-4" />, label: "Marketing Strategy" },
+                    { icon: <Calendar className="w-4 h-4" />, label: "Timeline & Milestones" },
+                    { icon: <Shield className="w-4 h-4" />, label: "Risk Analysis" }
+                  ].map((item, index) => (
+                    <a
+                      key={index}
+                      href={`#section-${index}`}
+                      className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                        item.active 
+                          ? 'bg-black text-white' 
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      {item.icon}
+                      <span className="text-sm">{item.label}</span>
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="lg:col-span-3">
+              <div className="bg-white rounded-xl border border-gray-200">
+                {/* Header */}
+                <div className="p-8 border-b border-gray-200">
+                  <div className="flex items-start justify-between mb-6">
+                    <div>
+                      <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                        AI-Powered Business Plan
+                      </h1>
+                      <p className="text-gray-600">
+                        Generated for: "{ideaInput || 'Your innovative business idea'}"
+                      </p>
+                    </div>
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                      <Edit3 className="w-5 h-5 text-gray-600" />
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center space-x-6 text-sm text-gray-500">
+                    <div className="flex items-center space-x-2">
+                      <Clock className="w-4 h-4" />
+                      <span>Generated 2 minutes ago</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <FileText className="w-4 h-4" />
+                      <span>12 pages</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                      <span>AI Confidence: 94%</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Executive Summary */}
+                <div className="p-8">
+                  <div className="mb-8">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                        <Lightbulb className="w-5 h-5 text-white" />
+                      </div>
+                      <h2 className="text-2xl font-bold text-gray-900">Executive Summary</h2>
+                    </div>
+                    
+                    <div className="prose max-w-none">
+                      <p className="text-gray-700 leading-relaxed mb-4">
+                        Your innovative business concept represents a significant opportunity in the rapidly evolving digital marketplace. 
+                        Based on our AI analysis of over 50,000 successful startups, your idea shows strong potential for scalability 
+                        and market penetration.
+                      </p>
+                      
+                      <div className="grid md:grid-cols-3 gap-6 my-8">
+                        <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                          <div className="text-2xl font-bold text-black mb-2">$2.4M</div>
+                          <div className="text-sm text-gray-600">Projected Year 1 Revenue</div>
+                        </div>
+                        <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                          <div className="text-2xl font-bold text-black mb-2">18 months</div>
+                          <div className="text-sm text-gray-600">Time to Break-even</div>
+                        </div>
+                        <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                          <div className="text-2xl font-bold text-black mb-2">$12.8B</div>
+                          <div className="text-sm text-gray-600">Total Addressable Market</div>
+                        </div>
+                      </div>
+
+                      <h3 className="text-xl font-semibold text-gray-900 mb-3">Key Success Factors</h3>
+                      <ul className="space-y-2 mb-6">
+                        <li className="flex items-start space-x-3">
+                          <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">Strong product-market fit with validated demand signals</span>
+                        </li>
+                        <li className="flex items-start space-x-3">
+                          <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">Scalable business model with multiple revenue streams</span>
+                        </li>
+                        <li className="flex items-start space-x-3">
+                          <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">Clear competitive advantages and defensible market position</span>
+                        </li>
+                        <li className="flex items-start space-x-3">
+                          <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">Experienced team with relevant industry expertise</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Market Analysis Preview */}
+                  <div className="border-t border-gray-200 pt-8">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <Target className="w-5 h-5 text-gray-600" />
+                      </div>
+                      <h2 className="text-2xl font-bold text-gray-900">Market Analysis</h2>
+                    </div>
+                    
+                    <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                      <h3 className="font-semibold text-gray-900 mb-3">Market Opportunity</h3>
+                      <p className="text-gray-700 mb-4">
+                        The market for your solution is experiencing unprecedented growth, with a compound annual growth rate (CAGR) 
+                        of 23.4% over the next five years. Key market drivers include increasing digital adoption, 
+                        changing consumer behaviors, and technological advancement.
+                      </p>
+                      
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">Market Size</h4>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Total Addressable Market (TAM)</span>
+                              <span className="font-medium">$12.8B</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Serviceable Addressable Market (SAM)</span>
+                              <span className="font-medium">$3.2B</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Serviceable Obtainable Market (SOM)</span>
+                              <span className="font-medium">$180M</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">Growth Projections</h4>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Year 1 Market Share</span>
+                              <span className="font-medium">0.8%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Year 3 Market Share</span>
+                              <span className="font-medium">2.4%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Year 5 Market Share</span>
+                              <span className="font-medium">5.2%</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Next Steps */}
+                  <div className="border-t border-gray-200 pt-8 mt-8">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Recommended Next Steps</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                        <h4 className="font-medium text-blue-900 mb-2">Immediate Actions (Week 1-2)</h4>
+                        <ul className="text-sm text-blue-800 space-y-1">
+                          <li>• Validate core assumptions with target customers</li>
+                          <li>• Build minimum viable product (MVP)</li>
+                          <li>• Secure initial funding or bootstrap resources</li>
+                        </ul>
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                        <h4 className="font-medium text-green-900 mb-2">Short-term Goals (Month 1-3)</h4>
+                        <ul className="text-sm text-green-800 space-y-1">
+                          <li>• Launch beta version to early adopters</li>
+                          <li>• Establish key partnerships</li>
+                          <li>• Build core team and advisory board</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white text-black relative overflow-hidden">
+      {/* Loading Overlay */}
+      {isGenerating && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 text-center">
+            <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
+              <Brain className="w-8 h-8 text-white animate-pulse" />
+            </div>
+            <h3 className="text-2xl font-bold mb-4">Generating Your Business Plan</h3>
+            <p className="text-gray-600 mb-6">Our AI is analyzing your idea and creating a comprehensive strategy...</p>
+            
+            <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+              <div 
+                className="bg-black h-3 rounded-full transition-all duration-300"
+                style={{ width: `${generationProgress}%` }}
+              ></div>
+            </div>
+            <div className="text-sm text-gray-500">{Math.round(generationProgress)}% complete</div>
+          </div>
+        </div>
+      )}
+
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.02),transparent)]"></div>
@@ -221,7 +522,10 @@ function App() {
             <a href="#features" className="text-gray-600 hover:text-black transition-colors">Features</a>
             <a href="#pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</a>
             <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Success Stories</a>
-            <button className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-all hover:shadow-lg">
+            <button 
+              onClick={handleStartJourney}
+              className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-all hover:shadow-lg"
+            >
               Get Started
             </button>
           </div>
@@ -241,7 +545,10 @@ function App() {
               <a href="#features" className="text-gray-600 hover:text-black transition-colors">Features</a>
               <a href="#pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</a>
               <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Success Stories</a>
-              <button className="bg-black text-white px-6 py-2 rounded-full">
+              <button 
+                onClick={handleStartJourney}
+                className="bg-black text-white px-6 py-2 rounded-full"
+              >
                 Get Started
               </button>
             </div>
@@ -310,6 +617,7 @@ function App() {
                 
                 {/* Submit Button */}
                 <button
+                  onClick={handleStartJourney}
                   className="absolute right-3 top-6 p-3 bg-black text-white rounded-full hover:bg-gray-800 transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!ideaInput.trim()}
                 >
@@ -324,7 +632,10 @@ function App() {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <button className="group bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition-all hover:shadow-lg flex items-center space-x-2">
+            <button 
+              onClick={handleStartJourney}
+              className="group bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition-all hover:shadow-lg flex items-center space-x-2"
+            >
               <span>Start Your Journey</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -557,7 +868,10 @@ function App() {
             Join thousands of successful entrepreneurs who've transformed their ideas 
             into billion-dollar businesses with UnicornLabs.
           </p>
-          <button className="group bg-white text-black px-12 py-4 rounded-full text-xl font-semibold hover:bg-gray-100 transition-all hover:shadow-lg flex items-center space-x-2 mx-auto">
+          <button 
+            onClick={handleStartJourney}
+            className="group bg-white text-black px-12 py-4 rounded-full text-xl font-semibold hover:bg-gray-100 transition-all hover:shadow-lg flex items-center space-x-2 mx-auto"
+          >
             <span>Start Your Journey Today</span>
             <Rocket className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </button>
