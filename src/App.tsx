@@ -17,13 +17,29 @@ import {
   DollarSign,
   BarChart3,
   Shield,
-  MessageSquare
+  MessageSquare,
+  Mic,
+  Send
 } from 'lucide-react';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [showDemo, setShowDemo] = useState(false);
+  const [ideaInput, setIdeaInput] = useState('');
+  const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
+  const [isListening, setIsListening] = useState(false);
+
+  const exampleIdeas = [
+    "I want to sleep in other people's houses and pay them for it",
+    "What if we let strangers drive other strangers around for money?",
+    "I want to send disappearing photos that somehow become permanent",
+    "Let's make a website where people argue about everything",
+    "What if we made people pay monthly to watch TV shows?",
+    "I want to sell books online... and then everything else",
+    "Let's make a social network but only for college students",
+    "What if we let people rent movies through the mail?"
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,6 +47,46 @@ function App() {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentExampleIndex((prev) => (prev + 1) % exampleIdeas.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleVoiceInput = () => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+      const recognition = new SpeechRecognition();
+      
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+      
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+      
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setIdeaInput(transcript);
+        setIsListening(false);
+      };
+      
+      recognition.onerror = () => {
+        setIsListening(false);
+      };
+      
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+      
+      recognition.start();
+    } else {
+      alert('Speech recognition not supported in this browser');
+    }
+  };
 
   const testimonials = [
     {
@@ -200,22 +256,66 @@ function App() {
             in 10 mins
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
             The AI-powered platform that transforms entrepreneurs into unicorn founders. 
             Get personalized strategies, connect with investors, and build your empire faster than ever.
           </p>
+          
+          {/* Idea Input Section */}
+          <div className="max-w-4xl mx-auto mb-12">
+            <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-lg">
+              <h3 className="text-2xl font-bold mb-6 text-black">What's your billion-dollar idea?</h3>
+              
+              {/* Example Ideas Carousel */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="text-sm text-gray-500 mb-2">💡 Crazy ideas that worked:</div>
+                <div className="text-gray-700 italic min-h-[24px] transition-all duration-500">
+                  "{exampleIdeas[currentExampleIndex]}"
+                </div>
+              </div>
+              
+              {/* Input Field */}
+              <div className="relative">
+                <textarea
+                  value={ideaInput}
+                  onChange={(e) => setIdeaInput(e.target.value)}
+                  placeholder="Describe your idea... (e.g., 'I want to create an app that...')"
+                  className="w-full p-6 pr-24 border-2 border-gray-200 rounded-xl text-lg resize-none focus:border-black focus:outline-none transition-colors"
+                  rows={3}
+                />
+                
+                {/* Voice Input Button */}
+                <button
+                  onClick={handleVoiceInput}
+                  className={`absolute right-16 top-6 p-3 rounded-full transition-all ${
+                    isListening 
+                      ? 'bg-red-500 text-white animate-pulse' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                  title="Voice input"
+                >
+                  <Mic className="w-5 h-5" />
+                </button>
+                
+                {/* Submit Button */}
+                <button
+                  className="absolute right-3 top-6 p-3 bg-black text-white rounded-full hover:bg-gray-800 transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!ideaInput.trim()}
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="mt-4 text-sm text-gray-500 text-center">
+                Our AI will analyze your idea and create a custom roadmap to $10M+ revenue
+              </div>
+            </div>
+          </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <button className="group bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition-all hover:shadow-lg flex items-center space-x-2">
               <span>Start Your Journey</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button 
-              onClick={() => setShowDemo(true)}
-              className="group border border-gray-300 px-8 py-4 rounded-full text-lg font-semibold hover:border-black hover:bg-gray-50 transition-colors flex items-center space-x-2"
-            >
-              <Play className="w-5 h-5" />
-              <span>Watch Demo</span>
             </button>
           </div>
           
@@ -266,6 +366,17 @@ function App() {
                 <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             ))}
+          </div>
+          
+          {/* Watch Demo Button - Moved Here */}
+          <div className="text-center mt-16">
+            <button 
+              onClick={() => setShowDemo(true)}
+              className="group border border-gray-300 px-8 py-4 rounded-full text-lg font-semibold hover:border-black hover:bg-white transition-colors flex items-center space-x-2 mx-auto"
+            >
+              <Play className="w-5 h-5" />
+              <span>Watch Demo</span>
+            </button>
           </div>
         </div>
       </section>
