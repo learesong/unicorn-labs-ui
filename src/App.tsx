@@ -34,7 +34,9 @@ import {
   TrendingUp as Growth,
   Code,
   Database,
-  Globe
+  Globe,
+  ChevronRight,
+  ChevronLeft
 } from 'lucide-react';
 
 function App() {
@@ -47,6 +49,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home'); // 'home' or 'business-plan'
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const exampleIdeas = [
@@ -58,6 +61,249 @@ function App() {
     "I want to sell books online... and then everything else",
     "Let's make a social network but only for college students",
     "What if we let people rent movies through the mail?"
+  ];
+
+  const businessPlanSections = [
+    {
+      id: 'executive-summary',
+      icon: <Lightbulb className="w-4 h-4" />,
+      label: 'Executive Summary',
+      title: 'Executive Summary',
+      content: {
+        intro: "Your innovative business concept represents a significant opportunity in the rapidly evolving digital marketplace. Based on our analysis of over 50,000 successful startups, your idea demonstrates strong potential for scalability and sustainable market penetration.",
+        metrics: [
+          { label: 'Projected Year 1 Revenue', value: '£1.8M' },
+          { label: 'Time to Break-even', value: '14 months' },
+          { label: 'Total Addressable Market', value: '£8.2B' }
+        ],
+        keyPoints: [
+          'Validated product-market fit with demonstrated demand signals',
+          'Scalable business model with diversified revenue streams',
+          'Clear competitive advantages and defensible market position',
+          'Experienced founding team with relevant industry expertise'
+        ]
+      }
+    },
+    {
+      id: 'market-analysis',
+      icon: <Target className="w-4 h-4" />,
+      label: 'Market Analysis',
+      title: 'Market Analysis',
+      content: {
+        intro: "The market for your solution is experiencing unprecedented growth, with a compound annual growth rate (CAGR) of 23.4% over the next five years. Key market drivers include increasing digital adoption, evolving consumer behaviours, and technological advancement.",
+        marketSize: [
+          { label: 'Total Addressable Market (TAM)', value: '£8.2B' },
+          { label: 'Serviceable Addressable Market (SAM)', value: '£2.1B' },
+          { label: 'Serviceable Obtainable Market (SOM)', value: '£120M' }
+        ],
+        growthProjections: [
+          { label: 'Year 1 Market Share', value: '0.8%' },
+          { label: 'Year 3 Market Share', value: '2.4%' },
+          { label: 'Year 5 Market Share', value: '5.2%' }
+        ]
+      }
+    },
+    {
+      id: 'target-audience',
+      icon: <Users className="w-4 h-4" />,
+      label: 'Target Audience',
+      title: 'Target Audience Analysis',
+      content: {
+        intro: "Our comprehensive market research has identified three primary customer segments that represent the highest value opportunities for your business concept.",
+        segments: [
+          {
+            name: 'Early Adopters',
+            size: '2.3M individuals',
+            characteristics: ['Tech-savvy professionals', 'High disposable income', 'Value innovation'],
+            painPoints: ['Time constraints', 'Quality concerns', 'Limited options']
+          },
+          {
+            name: 'Enterprise Customers',
+            size: '45K companies',
+            characteristics: ['£10M+ annual revenue', 'Digital transformation focus', 'Efficiency-driven'],
+            painPoints: ['Legacy system limitations', 'Scalability challenges', 'Cost optimisation']
+          },
+          {
+            name: 'SME Market',
+            size: '180K businesses',
+            characteristics: ['Growth-oriented', 'Resource-conscious', 'Agile decision-making'],
+            painPoints: ['Limited budgets', 'Skill gaps', 'Time to market pressure']
+          }
+        ]
+      }
+    },
+    {
+      id: 'business-model',
+      icon: <Briefcase className="w-4 h-4" />,
+      label: 'Business Model',
+      title: 'Business Model & Revenue Streams',
+      content: {
+        intro: "Your business model leverages multiple revenue streams to ensure sustainable growth and reduced dependency on any single income source.",
+        revenueStreams: [
+          {
+            name: 'Subscription Revenue',
+            percentage: '65%',
+            description: 'Monthly and annual recurring subscriptions',
+            projection: '£1.17M Year 1'
+          },
+          {
+            name: 'Transaction Fees',
+            percentage: '25%',
+            description: 'Commission on platform transactions',
+            projection: '£450K Year 1'
+          },
+          {
+            name: 'Premium Services',
+            percentage: '10%',
+            description: 'High-value consulting and custom solutions',
+            projection: '£180K Year 1'
+          }
+        ],
+        keyMetrics: [
+          { label: 'Customer Acquisition Cost (CAC)', value: '£85' },
+          { label: 'Customer Lifetime Value (CLV)', value: '£1,240' },
+          { label: 'Monthly Churn Rate', value: '3.2%' },
+          { label: 'Gross Margin', value: '78%' }
+        ]
+      }
+    },
+    {
+      id: 'financial-projections',
+      icon: <BarChart3 className="w-4 h-4" />,
+      label: 'Financial Projections',
+      title: 'Financial Projections & Growth',
+      content: {
+        intro: "Conservative financial projections based on comparable market data and validated assumptions about customer acquisition and retention.",
+        yearlyProjections: [
+          { year: 'Year 1', revenue: '£1.8M', expenses: '£1.2M', profit: '£600K', customers: '12K' },
+          { year: 'Year 2', revenue: '£4.2M', expenses: '£2.8M', profit: '£1.4M', customers: '28K' },
+          { year: 'Year 3', revenue: '£8.9M', expenses: '£5.6M', profit: '£3.3M', customers: '58K' },
+          { year: 'Year 4', revenue: '£16.2M', expenses: '£9.8M', profit: '£6.4M', customers: '105K' },
+          { year: 'Year 5', revenue: '£28.5M', expenses: '£16.2M', profit: '£12.3M', customers: '180K' }
+        ],
+        fundingRequirements: [
+          { round: 'Seed', amount: '£500K', use: 'Product development & initial team' },
+          { round: 'Series A', amount: '£2.5M', use: 'Market expansion & scaling' },
+          { round: 'Series B', amount: '£8M', use: 'International expansion' }
+        ]
+      }
+    },
+    {
+      id: 'marketing-strategy',
+      icon: <Growth className="w-4 h-4" />,
+      label: 'Marketing Strategy',
+      title: 'Go-to-Market Strategy',
+      content: {
+        intro: "A multi-channel approach focusing on digital marketing, strategic partnerships, and thought leadership to build brand awareness and drive customer acquisition.",
+        channels: [
+          {
+            name: 'Content Marketing',
+            budget: '£15K/month',
+            description: 'SEO-optimised content, thought leadership articles',
+            expectedROI: '4.2x'
+          },
+          {
+            name: 'Paid Advertising',
+            budget: '£25K/month',
+            description: 'Google Ads, LinkedIn, targeted social media',
+            expectedROI: '3.8x'
+          },
+          {
+            name: 'Partnership Marketing',
+            budget: '£8K/month',
+            description: 'Strategic alliances and co-marketing initiatives',
+            expectedROI: '6.1x'
+          }
+        ],
+        milestones: [
+          { milestone: 'Brand Launch', timeline: 'Month 1', description: 'Complete brand identity and website launch' },
+          { milestone: 'First 1K Users', timeline: 'Month 3', description: 'Achieve initial user base through early adopter campaigns' },
+          { milestone: 'Product-Market Fit', timeline: 'Month 6', description: 'Validate core value proposition with target segments' },
+          { milestone: 'Scale Marketing', timeline: 'Month 9', description: 'Expand marketing channels and increase spend' }
+        ]
+      }
+    },
+    {
+      id: 'timeline-milestones',
+      icon: <Calendar className="w-4 h-4" />,
+      label: 'Timeline & Milestones',
+      title: 'Implementation Timeline',
+      content: {
+        intro: "A detailed 18-month roadmap with key milestones, deliverables, and success metrics to guide execution and measure progress.",
+        phases: [
+          {
+            name: 'Foundation Phase',
+            duration: 'Months 1-3',
+            objectives: ['Build MVP', 'Validate concept', 'Secure initial funding'],
+            deliverables: ['Working prototype', 'First 100 users', 'Seed funding secured']
+          },
+          {
+            name: 'Growth Phase',
+            duration: 'Months 4-9',
+            objectives: ['Scale user base', 'Optimise product', 'Build team'],
+            deliverables: ['10K active users', 'Product-market fit', 'Series A funding']
+          },
+          {
+            name: 'Scale Phase',
+            duration: 'Months 10-18',
+            objectives: ['Market expansion', 'Revenue growth', 'Operational excellence'],
+            deliverables: ['£1M ARR', 'Market leadership', 'Sustainable growth']
+          }
+        ],
+        criticalPath: [
+          'Product development completion',
+          'Initial customer validation',
+          'Funding milestone achievement',
+          'Team scaling and hiring',
+          'Market expansion execution'
+        ]
+      }
+    },
+    {
+      id: 'risk-analysis',
+      icon: <Shield className="w-4 h-4" />,
+      label: 'Risk Analysis',
+      title: 'Risk Assessment & Mitigation',
+      content: {
+        intro: "Comprehensive analysis of potential risks and corresponding mitigation strategies to ensure business resilience and sustainable growth.",
+        risks: [
+          {
+            category: 'Market Risk',
+            level: 'Medium',
+            description: 'Market saturation or economic downturn',
+            mitigation: 'Diversified revenue streams and flexible pricing models',
+            probability: '25%'
+          },
+          {
+            category: 'Technology Risk',
+            level: 'Low',
+            description: 'Technical scalability or security issues',
+            mitigation: 'Robust architecture and regular security audits',
+            probability: '15%'
+          },
+          {
+            category: 'Competition Risk',
+            level: 'High',
+            description: 'New competitors or existing players pivoting',
+            mitigation: 'Strong IP protection and continuous innovation',
+            probability: '60%'
+          },
+          {
+            category: 'Funding Risk',
+            level: 'Medium',
+            description: 'Difficulty raising subsequent funding rounds',
+            mitigation: 'Strong unit economics and multiple funding sources',
+            probability: '30%'
+          }
+        ],
+        contingencyPlans: [
+          'Pivot strategy for alternative market segments',
+          'Cost reduction plan for economic downturns',
+          'Partnership agreements for market access',
+          'IP protection and defensive strategies'
+        ]
+      }
+    }
   ];
 
   useEffect(() => {
@@ -138,6 +384,7 @@ function App() {
           clearInterval(progressInterval);
           setIsGenerating(false);
           setCurrentPage('business-plan');
+          setActiveSection(0);
           return 100;
         }
         return prev + Math.random() * 15;
@@ -154,6 +401,27 @@ function App() {
       // If input section not visible, go directly with default idea
       setIdeaInput("I want to create an innovative tech startup");
       handleStartJourney();
+    }
+  };
+
+  const handleSectionClick = (index: number) => {
+    setActiveSection(index);
+    // Smooth scroll to section content
+    const sectionElement = document.getElementById(`section-${index}`);
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleNextSection = () => {
+    if (activeSection < businessPlanSections.length - 1) {
+      handleSectionClick(activeSection + 1);
+    }
+  };
+
+  const handlePrevSection = () => {
+    if (activeSection > 0) {
+      handleSectionClick(activeSection - 1);
     }
   };
 
@@ -259,11 +527,339 @@ function App() {
     }
   ];
 
+  const renderSectionContent = (section: typeof businessPlanSections[0]) => {
+    const content = section.content;
+    
+    switch (section.id) {
+      case 'executive-summary':
+        return (
+          <div className="prose max-w-none">
+            <p className="text-slate-700 leading-relaxed mb-6">{content.intro}</p>
+            
+            <div className="grid md:grid-cols-3 gap-6 my-8">
+              {content.metrics?.map((metric, index) => (
+                <div key={index} className="bg-slate-50 rounded-lg p-6 border border-slate-200">
+                  <div className="text-2xl font-bold text-slate-900 mb-2">{metric.value}</div>
+                  <div className="text-sm text-slate-600">{metric.label}</div>
+                </div>
+              ))}
+            </div>
+
+            <h3 className="text-xl font-semibold text-slate-900 mb-3">Key Success Factors</h3>
+            <ul className="space-y-2 mb-6">
+              {content.keyPoints?.map((point, index) => (
+                <li key={index} className="flex items-start space-x-3">
+                  <Check className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-slate-700">{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      
+      case 'market-analysis':
+        return (
+          <div className="prose max-w-none">
+            <p className="text-slate-700 leading-relaxed mb-6">{content.intro}</p>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-slate-900 mb-3">Market Size</h4>
+                <div className="space-y-2 text-sm">
+                  {content.marketSize?.map((item, index) => (
+                    <div key={index} className="flex justify-between">
+                      <span className="text-slate-600">{item.label}</span>
+                      <span className="font-medium">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-slate-900 mb-3">Growth Projections</h4>
+                <div className="space-y-2 text-sm">
+                  {content.growthProjections?.map((item, index) => (
+                    <div key={index} className="flex justify-between">
+                      <span className="text-slate-600">{item.label}</span>
+                      <span className="font-medium">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'target-audience':
+        return (
+          <div className="prose max-w-none">
+            <p className="text-slate-700 leading-relaxed mb-6">{content.intro}</p>
+            
+            <div className="space-y-6">
+              {content.segments?.map((segment, index) => (
+                <div key={index} className="bg-slate-50 rounded-lg p-6 border border-slate-200">
+                  <div className="flex justify-between items-start mb-4">
+                    <h4 className="font-semibold text-slate-900">{segment.name}</h4>
+                    <span className="text-sm text-slate-600 bg-white px-3 py-1 rounded-full border">
+                      {segment.size}
+                    </span>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <h5 className="font-medium text-slate-800 mb-2">Characteristics</h5>
+                      <ul className="text-sm text-slate-600 space-y-1">
+                        {segment.characteristics.map((char, charIndex) => (
+                          <li key={charIndex}>• {char}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h5 className="font-medium text-slate-800 mb-2">Pain Points</h5>
+                      <ul className="text-sm text-slate-600 space-y-1">
+                        {segment.painPoints.map((pain, painIndex) => (
+                          <li key={painIndex}>• {pain}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      
+      case 'business-model':
+        return (
+          <div className="prose max-w-none">
+            <p className="text-slate-700 leading-relaxed mb-6">{content.intro}</p>
+            
+            <div className="space-y-6 mb-8">
+              <h4 className="font-semibold text-slate-900">Revenue Streams</h4>
+              {content.revenueStreams?.map((stream, index) => (
+                <div key={index} className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                  <div className="flex justify-between items-start mb-2">
+                    <h5 className="font-medium text-slate-900">{stream.name}</h5>
+                    <span className="text-lg font-bold text-slate-900">{stream.percentage}</span>
+                  </div>
+                  <p className="text-sm text-slate-600 mb-2">{stream.description}</p>
+                  <div className="text-sm font-medium text-emerald-600">{stream.projection}</div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-slate-900 mb-3">Key Metrics</h4>
+                <div className="space-y-2 text-sm">
+                  {content.keyMetrics?.map((metric, index) => (
+                    <div key={index} className="flex justify-between">
+                      <span className="text-slate-600">{metric.label}</span>
+                      <span className="font-medium">{metric.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'financial-projections':
+        return (
+          <div className="prose max-w-none">
+            <p className="text-slate-700 leading-relaxed mb-6">{content.intro}</p>
+            
+            <div className="overflow-x-auto mb-8">
+              <table className="w-full border-collapse border border-slate-200">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="border border-slate-200 p-3 text-left">Year</th>
+                    <th className="border border-slate-200 p-3 text-left">Revenue</th>
+                    <th className="border border-slate-200 p-3 text-left">Expenses</th>
+                    <th className="border border-slate-200 p-3 text-left">Profit</th>
+                    <th className="border border-slate-200 p-3 text-left">Customers</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {content.yearlyProjections?.map((projection, index) => (
+                    <tr key={index}>
+                      <td className="border border-slate-200 p-3 font-medium">{projection.year}</td>
+                      <td className="border border-slate-200 p-3">{projection.revenue}</td>
+                      <td className="border border-slate-200 p-3">{projection.expenses}</td>
+                      <td className="border border-slate-200 p-3 text-emerald-600 font-medium">{projection.profit}</td>
+                      <td className="border border-slate-200 p-3">{projection.customers}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-slate-900 mb-4">Funding Requirements</h4>
+              <div className="space-y-3">
+                {content.fundingRequirements?.map((funding, index) => (
+                  <div key={index} className="flex justify-between items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div>
+                      <div className="font-medium text-slate-900">{funding.round}</div>
+                      <div className="text-sm text-slate-600">{funding.use}</div>
+                    </div>
+                    <div className="text-lg font-bold text-slate-900">{funding.amount}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'marketing-strategy':
+        return (
+          <div className="prose max-w-none">
+            <p className="text-slate-700 leading-relaxed mb-6">{content.intro}</p>
+            
+            <div className="space-y-6 mb-8">
+              <h4 className="font-semibold text-slate-900">Marketing Channels</h4>
+              {content.channels?.map((channel, index) => (
+                <div key={index} className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                  <div className="flex justify-between items-start mb-2">
+                    <h5 className="font-medium text-slate-900">{channel.name}</h5>
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-slate-900">{channel.budget}</div>
+                      <div className="text-xs text-emerald-600">ROI: {channel.expectedROI}</div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-600">{channel.description}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-slate-900 mb-4">Key Milestones</h4>
+              <div className="space-y-4">
+                {content.milestones?.map((milestone, index) => (
+                  <div key={index} className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-slate-900 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-1">
+                        <h5 className="font-medium text-slate-900">{milestone.milestone}</h5>
+                        <span className="text-sm text-slate-600">{milestone.timeline}</span>
+                      </div>
+                      <p className="text-sm text-slate-600">{milestone.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'timeline-milestones':
+        return (
+          <div className="prose max-w-none">
+            <p className="text-slate-700 leading-relaxed mb-6">{content.intro}</p>
+            
+            <div className="space-y-6 mb-8">
+              {content.phases?.map((phase, index) => (
+                <div key={index} className="bg-slate-50 rounded-lg p-6 border border-slate-200">
+                  <div className="flex justify-between items-start mb-4">
+                    <h4 className="font-semibold text-slate-900">{phase.name}</h4>
+                    <span className="text-sm text-slate-600 bg-white px-3 py-1 rounded-full border">
+                      {phase.duration}
+                    </span>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <h5 className="font-medium text-slate-800 mb-2">Objectives</h5>
+                      <ul className="text-sm text-slate-600 space-y-1">
+                        {phase.objectives.map((objective, objIndex) => (
+                          <li key={objIndex}>• {objective}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h5 className="font-medium text-slate-800 mb-2">Key Deliverables</h5>
+                      <ul className="text-sm text-slate-600 space-y-1">
+                        {phase.deliverables.map((deliverable, delIndex) => (
+                          <li key={delIndex}>• {deliverable}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-slate-900 mb-4">Critical Path</h4>
+              <div className="space-y-2">
+                {content.criticalPath?.map((item, index) => (
+                  <div key={index} className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-slate-900 rounded-full"></div>
+                    <span className="text-slate-700">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'risk-analysis':
+        return (
+          <div className="prose max-w-none">
+            <p className="text-slate-700 leading-relaxed mb-6">{content.intro}</p>
+            
+            <div className="space-y-4 mb-8">
+              {content.risks?.map((risk, index) => (
+                <div key={index} className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                  <div className="flex justify-between items-start mb-3">
+                    <h5 className="font-medium text-slate-900">{risk.category}</h5>
+                    <div className="flex items-center space-x-2">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        risk.level === 'High' ? 'bg-red-100 text-red-800' :
+                        risk.level === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {risk.level}
+                      </span>
+                      <span className="text-sm text-slate-600">{risk.probability}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-600 mb-2">{risk.description}</p>
+                  <div className="text-sm text-slate-800">
+                    <strong>Mitigation:</strong> {risk.mitigation}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-slate-900 mb-4">Contingency Plans</h4>
+              <ul className="space-y-2">
+                {content.contingencyPlans?.map((plan, index) => (
+                  <li key={index} className="flex items-start space-x-3">
+                    <Check className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-700">{plan}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      
+      default:
+        return <div>Content not available</div>;
+    }
+  };
+
   if (currentPage === 'business-plan') {
     return (
       <div className="min-h-screen bg-slate-50">
         {/* Header */}
-        <header className="bg-white border-b border-slate-200 px-6 py-4">
+        <header className="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button 
@@ -297,33 +893,58 @@ function App() {
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Sidebar Navigation */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl border border-slate-200 p-6 sticky top-8">
+              <div className="bg-white rounded-xl border border-slate-200 p-6 sticky top-24">
                 <h3 className="font-semibold text-slate-900 mb-4">Business Plan Sections</h3>
                 <nav className="space-y-2">
-                  {[
-                    { icon: <Lightbulb className="w-4 h-4" />, label: "Executive Summary", active: true },
-                    { icon: <Target className="w-4 h-4" />, label: "Market Analysis" },
-                    { icon: <Users className="w-4 h-4" />, label: "Target Audience" },
-                    { icon: <Briefcase className="w-4 h-4" />, label: "Business Model" },
-                    { icon: <BarChart3 className="w-4 h-4" />, label: "Financial Projections" },
-                    { icon: <Growth className="w-4 h-4" />, label: "Marketing Strategy" },
-                    { icon: <Calendar className="w-4 h-4" />, label: "Timeline & Milestones" },
-                    { icon: <Shield className="w-4 h-4" />, label: "Risk Analysis" }
-                  ].map((item, index) => (
-                    <a
+                  {businessPlanSections.map((section, index) => (
+                    <button
                       key={index}
-                      href={`#section-${index}`}
-                      className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                        item.active 
+                      onClick={() => handleSectionClick(index)}
+                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-left ${
+                        index === activeSection
                           ? 'bg-slate-900 text-white' 
                           : 'text-slate-600 hover:bg-slate-100'
                       }`}
                     >
-                      {item.icon}
-                      <span className="text-sm">{item.label}</span>
-                    </a>
+                      {section.icon}
+                      <span className="text-sm">{section.label}</span>
+                    </button>
                   ))}
                 </nav>
+                
+                {/* Navigation Controls */}
+                <div className="mt-6 pt-6 border-t border-slate-200">
+                  <div className="flex justify-between">
+                    <button
+                      onClick={handlePrevSection}
+                      disabled={activeSection === 0}
+                      className="flex items-center space-x-2 px-3 py-2 text-sm text-slate-600 hover:text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      <span>Previous</span>
+                    </button>
+                    <button
+                      onClick={handleNextSection}
+                      disabled={activeSection === businessPlanSections.length - 1}
+                      className="flex items-center space-x-2 px-3 py-2 text-sm text-slate-600 hover:text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <span>Next</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  <div className="mt-4">
+                    <div className="text-xs text-slate-500 mb-2">
+                      Section {activeSection + 1} of {businessPlanSections.length}
+                    </div>
+                    <div className="w-full bg-slate-200 rounded-full h-2">
+                      <div 
+                        className="bg-slate-900 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${((activeSection + 1) / businessPlanSections.length) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -362,138 +983,44 @@ function App() {
                   </div>
                 </div>
 
-                {/* Executive Summary */}
-                <div className="p-8">
+                {/* Dynamic Section Content */}
+                <div className="p-8" id={`section-${activeSection}`}>
                   <div className="mb-8">
-                    <div className="flex items-center space-x-3 mb-4">
+                    <div className="flex items-center space-x-3 mb-6">
                       <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
-                        <Lightbulb className="w-5 h-5 text-white" />
+                        {businessPlanSections[activeSection].icon}
                       </div>
-                      <h2 className="text-2xl font-bold text-slate-900">Executive Summary</h2>
+                      <h2 className="text-2xl font-bold text-slate-900">
+                        {businessPlanSections[activeSection].title}
+                      </h2>
                     </div>
                     
-                    <div className="prose max-w-none">
-                      <p className="text-slate-700 leading-relaxed mb-4">
-                        Your innovative business concept represents a significant opportunity in the rapidly evolving digital marketplace. 
-                        Based on our analysis of over 50,000 successful startups, your idea demonstrates strong potential for scalability 
-                        and sustainable market penetration.
-                      </p>
-                      
-                      <div className="grid md:grid-cols-3 gap-6 my-8">
-                        <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                          <div className="text-2xl font-bold text-slate-900 mb-2">£1.8M</div>
-                          <div className="text-sm text-slate-600">Projected Year 1 Revenue</div>
-                        </div>
-                        <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                          <div className="text-2xl font-bold text-slate-900 mb-2">14 months</div>
-                          <div className="text-sm text-slate-600">Time to Break-even</div>
-                        </div>
-                        <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                          <div className="text-2xl font-bold text-slate-900 mb-2">£8.2B</div>
-                          <div className="text-sm text-slate-600">Total Addressable Market</div>
-                        </div>
-                      </div>
-
-                      <h3 className="text-xl font-semibold text-slate-900 mb-3">Key Success Factors</h3>
-                      <ul className="space-y-2 mb-6">
-                        <li className="flex items-start space-x-3">
-                          <Check className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-slate-700">Validated product-market fit with demonstrated demand signals</span>
-                        </li>
-                        <li className="flex items-start space-x-3">
-                          <Check className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-slate-700">Scalable business model with diversified revenue streams</span>
-                        </li>
-                        <li className="flex items-start space-x-3">
-                          <Check className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-slate-700">Clear competitive advantages and defensible market position</span>
-                        </li>
-                        <li className="flex items-start space-x-3">
-                          <Check className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-slate-700">Experienced founding team with relevant industry expertise</span>
-                        </li>
-                      </ul>
-                    </div>
+                    {renderSectionContent(businessPlanSections[activeSection])}
                   </div>
 
-                  {/* Market Analysis Preview */}
-                  <div className="border-t border-slate-200 pt-8">
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                        <Target className="w-5 h-5 text-slate-600" />
-                      </div>
-                      <h2 className="text-2xl font-bold text-slate-900">Market Analysis</h2>
+                  {/* Section Navigation */}
+                  <div className="flex justify-between items-center pt-8 border-t border-slate-200">
+                    <button
+                      onClick={handlePrevSection}
+                      disabled={activeSection === 0}
+                      className="flex items-center space-x-2 px-6 py-3 border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                      <span>Previous Section</span>
+                    </button>
+                    
+                    <div className="text-sm text-slate-500">
+                      {activeSection + 1} of {businessPlanSections.length}
                     </div>
                     
-                    <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                      <h3 className="font-semibold text-slate-900 mb-3">Market Opportunity</h3>
-                      <p className="text-slate-700 mb-4">
-                        The market for your solution is experiencing unprecedented growth, with a compound annual growth rate (CAGR) 
-                        of 23.4% over the next five years. Key market drivers include increasing digital adoption, 
-                        evolving consumer behaviours, and technological advancement.
-                      </p>
-                      
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="font-medium text-slate-900 mb-2">Market Size</h4>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Total Addressable Market (TAM)</span>
-                              <span className="font-medium">£8.2B</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Serviceable Addressable Market (SAM)</span>
-                              <span className="font-medium">£2.1B</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Serviceable Obtainable Market (SOM)</span>
-                              <span className="font-medium">£120M</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium text-slate-900 mb-2">Growth Projections</h4>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Year 1 Market Share</span>
-                              <span className="font-medium">0.8%</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Year 3 Market Share</span>
-                              <span className="font-medium">2.4%</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Year 5 Market Share</span>
-                              <span className="font-medium">5.2%</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Next Steps */}
-                  <div className="border-t border-slate-200 pt-8 mt-8">
-                    <h3 className="text-xl font-semibold text-slate-900 mb-4">Recommended Next Steps</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                        <h4 className="font-medium text-blue-900 mb-2">Immediate Actions (Week 1-2)</h4>
-                        <ul className="text-sm text-blue-800 space-y-1">
-                          <li>• Validate core assumptions with target customers</li>
-                          <li>• Build minimum viable product (MVP)</li>
-                          <li>• Secure initial funding or bootstrap resources</li>
-                        </ul>
-                      </div>
-                      <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
-                        <h4 className="font-medium text-emerald-900 mb-2">Short-term Goals (Month 1-3)</h4>
-                        <ul className="text-sm text-emerald-800 space-y-1">
-                          <li>• Launch beta version to early adopters</li>
-                          <li>• Establish key partnerships</li>
-                          <li>• Build core team and advisory board</li>
-                        </ul>
-                      </div>
-                    </div>
+                    <button
+                      onClick={handleNextSection}
+                      disabled={activeSection === businessPlanSections.length - 1}
+                      className="flex items-center space-x-2 px-6 py-3 bg-slate-900 text-white rounded-lg hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <span>Next Section</span>
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
               </div>
